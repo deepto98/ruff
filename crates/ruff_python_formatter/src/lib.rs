@@ -35,6 +35,7 @@ mod prelude;
 mod preview;
 mod shared_traits;
 pub(crate) mod statement;
+pub(crate) mod string;
 pub(crate) mod type_param;
 mod verbatim;
 

@@ -18,10 +18,10 @@ use crate::expression::parentheses::{
     is_expression_parenthesized, write_in_parentheses_only_group_end_tag,
     write_in_parentheses_only_group_start_tag, Parentheses,
 };
-use crate::expression::string::{AnyString, FormatString, StringLayout};
 use crate::expression::OperatorPrecedence;
 use crate::prelude::*;
 use crate::preview::is_fix_power_op_line_length_enabled;
+use crate::string::{AnyString, FormatString, StringLayout};
 
 #[derive(Copy, Clone, Debug)]
 pub(super) enum BinaryLike<'a> {

@@ -1,21 +1,49 @@
 use memchr::memchr2;
 
-use crate::comments::SourceComment;
 use ruff_formatter::FormatResult;
+use ruff_formatter::FormatRuleWithOptions;
 use ruff_python_ast::AnyNodeRef;
 use ruff_python_ast::ExprFString;
 
-use crate::expression::parentheses::{NeedsParentheses, OptionalParentheses};
+use crate::comments::SourceComment;
+use crate::expression::parentheses::{
+    in_parentheses_only_group, NeedsParentheses, OptionalParentheses,
+};
 use crate::prelude::*;
-
-use super::string::{AnyString, FormatString};
+use crate::string::{AnyString, FormatStringContinuation, StringLayout};
 
 #[derive(Default)]
-pub struct FormatExprFString;
+pub struct FormatExprFString {
+    layout: StringLayout,
+}
+
+impl FormatRuleWithOptions<ExprFString, PyFormatContext<'_>> for FormatExprFString {
+    type Options = StringLayout;
+
+    fn with_options(mut self, options: Self::Options) -> Self {
+        self.layout = options;
+        self
+    }
+}
 
 impl FormatNodeRule<ExprFString> for FormatExprFString {
     fn fmt_fields(&self, item: &ExprFString, f: &mut PyFormatter) -> FormatResult<()> {
-        FormatString::new(&AnyString::FString(item)).fmt(f)
+        let ExprFString { value, .. } = item;
+
+        match self.layout {
+            StringLayout::DocString => unreachable!("`ExprFString` cannot be a docstring"),
+            StringLayout::Default => match value.as_slice() {
+                [] => unreachable!("Empty `ExprFString`"),
+                [f_string_part] => f_string_part.format().fmt(f),
+                _ => in_parentheses_only_group(&FormatStringContinuation::new(
+                    &AnyString::FString(item),
+                ))
+                .fmt(f),
+            },
+            StringLayout::ImplicitConcatenatedStringInBinaryLike => {
+                FormatStringContinuation::new(&AnyString::FString(item)).fmt(f)
+            }
+        }
     }
 
     fn fmt_dangling_comments(

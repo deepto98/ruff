@@ -74,6 +74,7 @@ pub(crate) use useless_return::*;
 pub(crate) use useless_with_lock::*;
 pub(crate) use yield_from_in_async_function::*;
 pub(crate) use yield_in_init::*;
+pub(crate) use access_member_before_definition::*;
 
 mod and_or_ternary;
 mod assert_on_string_literal;
@@ -151,3 +152,4 @@ mod useless_return;
 mod useless_with_lock;
 mod yield_from_in_async_function;
 mod yield_in_init;
+mod access_member_before_definition;

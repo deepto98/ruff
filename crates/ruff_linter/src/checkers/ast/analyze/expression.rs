@@ -328,6 +328,9 @@ pub(crate) fn expression(expr: &Expr, checker: &mut Checker) {
             if checker.enabled(Rule::UndocumentedWarn) {
                 flake8_logging::rules::undocumented_warn(checker, expr);
             }
+            if checker.enabled(Rule::AccessMemberBeforeDefinition) {
+                pylint::rules::access_member_before_definition(checker, expr);
+            }
             pandas_vet::rules::attr(checker, attribute);
         }
         Expr::Call(

@@ -205,6 +205,7 @@ pub fn code_to_rule(linter: Linter, code: &str) -> Option<(RuleGroup, Rule)> {
         (Pyflakes, "901") => (RuleGroup::Stable, rules::pyflakes::rules::RaiseNotImplemented),
 
         // pylint
+        (Pylint, "E0203") => (RuleGroup::Preview, rules::pylint::rules::AccessMemberBeforeDefinition),
         (Pylint, "C0105") => (RuleGroup::Stable, rules::pylint::rules::TypeNameIncorrectVariance),
         (Pylint, "C0131") => (RuleGroup::Stable, rules::pylint::rules::TypeBivariance),
         (Pylint, "C0132") => (RuleGroup::Stable, rules::pylint::rules::TypeParamNameMismatch),
